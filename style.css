@@ -1,0 +1,30 @@
+* 
+{
+  margin: 0;
+  padding: 0;
+}
+
+body, html
+{
+  overflow: hidden;
+}
+
+#leftSide
+{
+  float: left;
+  height: 100vh;
+  background-color: rgb(231, 231, 231);
+  width: 25%;
+}
+
+.button
+{
+  height: 40px;
+  width: 100px;
+}
+
+#rightSide
+{
+  width:75%;
+  float: right;
+}
