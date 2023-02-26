@@ -1,6 +1,8 @@
 function exportSTL()
 {
+  orientSceneForExport();
   var str = exporter.parse( scene ); // Export the scene
+  orientSceneAfterExport();
   var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
   //saveAs( blob, 'file.stl' ); //Save the Blob to file.stl
 

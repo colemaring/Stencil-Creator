@@ -62,6 +62,25 @@ function tempBackplate()
 }
 window.tempBackplate = tempBackplate
 
+function orientSceneForExport()
+{
+  scene.rotation.x = -Math.PI / 2;
+  scene.rotation.y = Math.PI;
+  scene.rotation.z = Math.PI;
+  scene.updateMatrixWorld();
+}
+window.orientSceneForExport = orientSceneForExport;
+
+function orientSceneAfterExport()
+{
+  scene.rotation.x = Math.PI;
+  scene.rotation.y = Math.PI;
+  scene.rotation.z = Math.PI;
+  scene.updateMatrixWorld();
+}
+
+window.orientSceneAfterExport = orientSceneAfterExport;
+
 
 const fontLoader = new FontLoader(); 
 
@@ -112,6 +131,8 @@ const divisions = 10;
 
 const gridHelper = new THREE.GridHelper( size, divisions );
 scene.add( gridHelper );
+
+
 
 
 //Renderer
