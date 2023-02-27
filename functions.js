@@ -1,104 +1,63 @@
-function exportSTL()
-{
-  orientSceneForExport();
-  var str = exporter.parse( scene ); // Export the scene
-  orientSceneAfterExport();
-  var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
-  //saveAs( blob, 'file.stl' ); //Save the Blob to file.stl
-
-  //Following code will help you to save the file without FileSaver.js
-  var link = document.createElement('a');
-  link.style.display = 'none';
-  document.body.appendChild(link);
-  link.href = URL.createObjectURL(blob);
-  link.download = 'Scene.stl';
-  link.click();
-}
-
+// calls updateStencil() on input change
 let fontSizeInput = document.getElementById("fontSlider");
-fontSizeInput.addEventListener('input', changeFontSize);
+fontSizeInput.addEventListener("input", function () {
+  updateStencil(fontSizeInput);
+});
 
 let fontChoiceInput = document.getElementById("fontSelection");
-fontChoiceInput.addEventListener('change', changeFont);
+fontChoiceInput.addEventListener("change", function () {
+  updateStencil(fontChoiceInput);
+});
 
 let textPosXInput = document.getElementById("textPosX");
-textPosXInput.addEventListener('input', changeTextPosX);
+textPosXInput.addEventListener("input", function () {
+  updateStencil(textPosXInput);
+});
 
 let textPosYInput = document.getElementById("textPosY");
-textPosYInput.addEventListener('input', changeTextPosY);
+textPosYInput.addEventListener("input", function () {
+  updateStencil(textPosYInput);
+});
 
 let textInput = document.getElementById("textbox");
-textInput.addEventListener('input', updateStencil);
+textInput.addEventListener("input", function () {
+  updateStencil(textInput);
+});
 
 let backPlateXInput = document.getElementById("backPlateX");
-backPlateXInput.addEventListener('input', changeBackPlateX);
+backPlateXInput.addEventListener("input", function () {
+  updateStencil(backPlateXInput);
+});
 
 let backPlateYInput = document.getElementById("backPlateY");
-backPlateYInput.addEventListener('input', changeBackPlateY);
+backPlateYInput.addEventListener("input", function () {
+  updateStencil(backPlateYInput);
+});
 
 let backPlateZInput = document.getElementById("backPlateZ");
-backPlateZInput.addEventListener('input', changeBackPlateZ);
+backPlateZInput.addEventListener("input", function () {
+  updateStencil(backPlateZInput);
+});
 
-function updateStencil()
-{
-  tempBackplate(); // put this call in deleteStencil() on refactor
-  deleteStencil();
-  window.textInput = textInput;
-  updateText();
-}
+// exports the scene as an stl file
+function exportSTL() {
+  orientSceneForExport();
+  var str = exporter.parse(scene);
+  orientSceneAfterExport();
 
-function changeFontSize()
-{
-  tempBackplate();
-  deleteStencil();
-  window.fontSizeInput = fontSizeInput;
-  updateText();
-}
+  var blob = new Blob([str], { type: "text/plain" });
+  var link = document.createElement("a");
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.href = URL.createObjectURL(blob);
+  link.download = textInput.value + ".stl";
+  link.click();
+} 
 
-function changeFont()
+// calls helper methods in main.js
+function updateStencil(e)
 {
-  tempBackplate();
   deleteStencil();
-  window.fontChoiceInput = fontChoiceInput
-  updateText();
-}
-
-function changeTextPosX()
-{
-  tempBackplate();
-  deleteStencil();
-  window.textPosXInput = textPosXInput;
-  updateText();
-}
-
-function changeTextPosY()
-{
-  tempBackplate(); 
-  deleteStencil();
-  window.textPosYInput = textPosYInput;
-  updateText();
-}
-
-function changeBackPlateX()
-{
-  tempBackplate(); 
-  deleteStencil();
-  window.backPlateXInput = backPlateXInput;
-  updateText();
-}
-
-function changeBackPlateY()
-{
-  tempBackplate(); 
-  deleteStencil();
-  window.backPlateYInput = backPlateYInput;
-  updateText();
-}
-
-function changeBackPlateZ()
-{
-  tempBackplate(); 
-  deleteStencil();
-  window.backPlateZInput = backPlateZInput;
+  window.e = e;
   updateText();
 }

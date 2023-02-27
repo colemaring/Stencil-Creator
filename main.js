@@ -1,169 +1,162 @@
-import * as THREE from 'three'
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { STLExporter } from 'three/addons/exporters/STLExporter.js';
-import { CSG } from 'three-csg-ts';
-import "./style.css"
+import * as THREE from "three";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { STLExporter } from "three/addons/exporters/STLExporter.js";
+import { CSG } from "three-csg-ts";
+import "./style.css";
 
-var exporter = new STLExporter();
-window.exporter = exporter;
+const fontLoader = new FontLoader();
 
-//Initialize scene
-const scene = new THREE.Scene();
-window.scene = scene;
-
+// used for camera, renderer, and resize
 const sizes = {
   width: window.innerWidth / 1.25,
   height: window.innerHeight,
-}
+};
 
-//Create the camera
+// global exporter to use in exportSTL()
+var exporter = new STLExporter();
+window.exporter = exporter;
+
+// initialize scene
+const scene = new THREE.Scene();
+scene.background = new THREE.Color( 0xd4d4d4  );
+window.scene = scene;
+
+// create the camera
 const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height);
 camera.position.z = 150;
 
-//Create some light
-const light = new THREE.PointLight( 0xffffff, 4);
-light.position.set( 200, 300, 2000 );
-scene.add( light );
+// create some light
+const ambient = new THREE.AmbientLight(0xffffff, 0.5)
+const light = new THREE.PointLight(0xffffff, 0.5);
+light.position.set(0, 300, 0);
+scene.add(ambient);
+scene.add(light);
+
+// add grid to the scene
+const gridHelper = new THREE.GridHelper(200, 30);
+scene.add(gridHelper);
+
+// create the renderer
+const canvas = document.querySelector(".webgl");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(sizes.width, sizes.height);
+renderer.render(scene, camera);
+
+// create the orbit controls
+const controls = new OrbitControls(camera, renderer.domElement);
+camera.position.set(0, 130, 0);
+controls.maxPolarAngle = Math.PI / 2;
+controls.update();
+
+// window resize listener
+window.addEventListener("resize", () => {
+  sizes.width = window.innerWidth / 1.25;
+  sizes.height = window.innerHeight;
+
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(sizes.width, sizes.height);
+});
+
+// animation loop
+function animate() {
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
 
 // deletes all meshes in scene
-function deleteStencil()
-{
-  for (let i = scene.children.length - 1; i >= 0; i--)
-  {
-    if(scene.children[i].type === "Mesh")
-    {
-      if (scene.children[i].name === "temp")
-      {
+function deleteStencil() {
+  tempBackplate();
+  for (let i = scene.children.length - 1; i >= 0; i--) {
+    if (scene.children[i].type === "Mesh") {
+      if (scene.children[i].name === "temp") {
         continue;
       }
       scene.remove(scene.children[i]);
     }
   }
 }
-
 window.deleteStencil = deleteStencil;
 
-// creates a temporary backplate to prevent flashing when updating stencil
-function tempBackplate()
-{
-  const geometry = new THREE.BoxGeometry( backPlateXInput.value, backPlateYInput.value, backPlateZInput.value);
-  const material = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
-  const tempPlate = new THREE.Mesh( geometry, material );
-  tempPlate.rotation.x = Math.PI / 2;
-  tempPlate.rotation.y = Math.PI;
-  tempPlate.rotation.z = Math.PI;
-  tempPlate.name = "temp";
-  scene.add(tempPlate);
-  setTimeout(function(){
-    scene.remove(tempPlate);
-  }, 10);
-}
-window.tempBackplate = tempBackplate
+// helper function for delteStencil() that creates a temporary
+// backplate to prevent flashing when updating the stencil
+function tempBackplate() {
+  const geometry = new THREE.BoxGeometry(
+    backPlateXInput.value,
+    backPlateYInput.value,
+    backPlateZInput.value
+  );
 
-function orientSceneForExport()
-{
-  scene.rotation.x = -Math.PI / 2;
-  scene.rotation.y = Math.PI;
-  scene.rotation.z = Math.PI;
+  const material = new THREE.MeshStandardMaterial({ color: 0x7882ab });
+  const tempPlate = new THREE.Mesh(geometry, material);
+  tempPlate.position.set(0, backPlateZInput.value / 2, 0);
+  tempPlate.rotation.set(Math.PI / 2, Math.PI, Math.PI);
+  tempPlate.name = "temp";
+
+  scene.add(tempPlate);
+
+  setTimeout(function () {
+    scene.remove(tempPlate);
+  }, 5);
+}
+window.tempBackplate = tempBackplate;
+
+// orient scene before exporter.parse(scene) is called
+function orientSceneForExport() {
+  scene.rotation.set(-Math.PI / 2, Math.PI, Math.PI);
   scene.updateMatrixWorld();
 }
 window.orientSceneForExport = orientSceneForExport;
 
-function orientSceneAfterExport()
-{
-  scene.rotation.x = Math.PI;
-  scene.rotation.y = Math.PI;
-  scene.rotation.z = Math.PI;
+// orient scene after exporter.parse(scene) is called
+function orientSceneAfterExport() {
+  scene.rotation.set(Math.PI, Math.PI, Math.PI);
   scene.updateMatrixWorld();
 }
-
 window.orientSceneAfterExport = orientSceneAfterExport;
 
+// called whenever a input is changed
+// creates and adds to the scene a new stencil per the specifications of inputs
+function updateText() {
+  let fileName =
+    "node_modules/three/examples/fonts/" + fontChoiceInput.value + ".json";
 
-const fontLoader = new FontLoader(); 
-
-function updateText()
-{
-  let fileName = 'node_modules/three/examples/fonts/' + fontChoiceInput.value + '.json';
-  
-  fontLoader.load(
-    fileName,
-    (droidFont) => {
-      
+  fontLoader.load(fileName, (droidFont) => {
     const textGeometry = new TextGeometry(textInput.value, {
-    height: 100,
-    size: fontSizeInput.value,
-    font: droidFont,
+      height: 100,
+      size: fontSizeInput.value,
+      font: droidFont,
+    });
+
+    const geometry = new THREE.BoxGeometry(
+      backPlateXInput.value,
+      backPlateYInput.value,
+      backPlateZInput.value
+    );
+
+    const plateMaterial = new THREE.MeshStandardMaterial({ color: 0x7882ab });
+    const plate = new THREE.Mesh(geometry, plateMaterial);
+    plate.position.set(0, backPlateZInput.value / 2, 0);
+
+    const textMaterial = new THREE.MeshNormalMaterial();
+    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    textMesh.geometry.center();
+
+    textMesh.position.x = textPosXInput.value - 0; // only works when subtracting a number??
+    textMesh.position.y = textPosYInput.value - 0;
+    textMesh.position.z = -1;
+    textMesh.updateMatrix();
+    plate.updateMatrix();
+
+    const subRes = CSG.subtract(plate, textMesh);
+    subRes.rotation.set(Math.PI / 2, Math.PI, Math.PI);
+
+    scene.add(subRes);
+    window.subRes = subRes;
   });
-  const geometry = new THREE.BoxGeometry( backPlateXInput.value, backPlateYInput.value, backPlateZInput.value );
-  const material = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
-  const cube = new THREE.Mesh( geometry, material );
-  const textMaterial = new THREE.MeshNormalMaterial();
-  const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-  textMesh.geometry.center();
-
-  //console.log(textPosXInput.value)
-  textMesh.position.x = textPosXInput.value - 0; // only works when subtracting a number??
-  textMesh.position.y = textPosYInput.value - 0;
-
-  textMesh.position.z = -1;
-  textMesh.updateMatrix();
-  cube.updateMatrix();
-
-  const subRes = CSG.subtract(cube, textMesh);
-  subRes.rotation.x = Math.PI / 2;
-  subRes.rotation.y = Math.PI;
-  subRes.rotation.z = Math.PI;
-  //console.log("x pos is " + textMesh.position.x + " and y pos is " + textMesh.position.y)
-  scene.add(subRes);
-  window.subRes = subRes;
-  }
-  );
 }
-
 updateText();
 window.updateText = updateText;
-
-const size = 120;
-const divisions = 10;
-
-const gridHelper = new THREE.GridHelper( size, divisions );
-scene.add( gridHelper );
-
-
-
-
-//Renderer
-const canvas = document.querySelector(".webgl")
-const renderer = new THREE.WebGLRenderer({canvas, antialias: true })
-renderer.setSize(sizes.width, sizes.height)
-renderer.render(scene,camera);
-
-// Orbit Controls
-const controls = new OrbitControls(camera, renderer.domElement);
-camera.position.set(0, 130, 0);
-controls.maxPolarAngle = Math.PI / 2
-controls.update();
-
-//Resize
-window.addEventListener('resize', () =>{
-  //Update sizes
-  sizes.width = window.innerWidth / 1.25
-  sizes.height = window.innerHeight
-
-  //Update camera
-  camera.aspect = sizes.width / sizes.height
-  camera.updateProjectionMatrix()
-  renderer.setSize(sizes.width, sizes.height)
-})
-
-//Animation loop
-function animate() {
-    renderer.render(scene, camera);
-    // .rotation.y += 0.002;
-    requestAnimationFrame(animate);
-}
-
-animate();

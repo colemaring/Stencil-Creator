@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StencilMaker</title>
-  </head>
-  <body>
-    <div id = "leftSide">
-      <input type = "text" value = 'Hello World!' id = "textbox" ><br>
-      <select id = "fontSelection">
-        <option value = "Stencilia-A">Stencilia-A</option>
-        <option value = "Bulletproof">Bulletproof</option>
-        <option value = "Gunplay">Gunplay</option>
-        <option value = "USAAF">USAAF</option>
-        <option value = "OldSchoolUnitedStencil">OldSchoolUnitedStencil</option>
-        <option value = "OldSchoolUnitedStencilItallic">OldSchoolUnitedStencilItallic</option>
-        <option value = "MarbellaArmy">MarbellaArmy</option>
-        <option value = "Pixel-7">Pixel-7</option>
-        <option value = "PunkIsDead">PunkIsDead</option>
-        <option value = "Revamped">Revamped</option>
-        <option value = "Lordcorps">Lordcorps</option>
-        <option value = "BOMBORA">BOMBORA</option>
-        <option value = "Stencilia-Bold">Stencilia-Bold</option>
-      </select>
-      <label for = "fontSelection">Font</label><br>
 
-      <input type = "range" id = "fontSlider" value = "10" min = "6" max = "38">
-      <label for = "fontSlider">Font Size</label><br>
-      <input type = "range" id = "textPosX" value = "0" min = "-50" max = "50">
-      <label for = "textPosX">Text Position X</label><br>
-      <input type = "range" id = "textPosY" value = "0" min = "-50" max = "50">
-      <label for = "textPosY">Text Position Y</label><br>
-      <input type = "range" id = "backPlateX" value = "100" min = "20" max = "200">
-      <label for = "backPlateX">Backplate X</label><br>
-      <input type = "range" id = "backPlateY" value = "40" min = "10" max = "80">
-      <label for = "backPlateY">Backplate Y</label><br>
-      <input type = "range" id = "backPlateZ" value = "2" min = "0.5" max = "5" step = "0.5">
-      <label for = "backPlateZ">Backplate Z</label><br>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stencil Creator</title>
+</head>
 
-      <button id = "exportButton" class = "button" onclick = exportSTL()>Export as STL</button>
-    </div>
-    <div id = "rightSide">
-      <canvas class = "webgl"></canvas>
-    </div>
-    <script src="functions.js"></script>
-    <script type="module" src="/main.js"></script>
-  </body>
+<body>
+  <div id="leftSide">
+    <input type="text" value='SampleText' id="textbox"><br>
+
+    <select id="fontSelection">
+      <option value="Stencilia-A">Stencilia-A</option>
+      <option value="Bulletproof">Bulletproof</option>
+      <option value="Gunplay">Gunplay</option>
+      <option value="USAAF">USAAF</option>
+      <option value="OldSchoolUnitedStencil">OldSchoolUnitedStencil</option>
+      <option value="OldSchoolUnitedStencilItallic">OldSchoolUnitedStencilItallic</option>
+      <option value="MarbellaArmy">MarbellaArmy</option>
+      <option value="Pixel-7">Pixel-7</option>
+      <option value="PunkIsDead">PunkIsDead</option>
+      <option value="Revamped">Revamped</option>
+      <option value="Lordcorps">Lordcorps</option>
+      <option value="BOMBORA">BOMBORA</option>
+      <option value="Stencilia-Bold">Stencilia-Bold</option>
+    </select>
+
+    <label for="fontSelection">Font</label><br>
+    <input type="range" id="fontSlider" value="10" min="6" max="38">
+    <label for="fontSlider">Font Size</label><br>
+    <input type="range" id="textPosX" value="0" min="-50" max="50">
+    <label for="textPosX">Text Position X</label><br>
+    <input type="range" id="textPosY" value="0" min="-50" max="50">
+    <label for="textPosY">Text Position Y</label><br>
+    <input type="range" id="backPlateX" value="100" min="20" max="200">
+    <label for="backPlateX">Backplate Length</label><br>
+    <input type="range" id="backPlateY" value="40" min="10" max="80">
+    <label for="backPlateY">Backplate Width</label><br>
+    <input type="range" id="backPlateZ" value="2" min="0.5" max="5" step="0.5">
+    <label for="backPlateZ">Backplate Height</label><br>
+
+    <button id="exportButton" class="button" onclick=exportSTL()>Export as STL</button>
+  </div>
+  <div id="rightSide">
+    <canvas class="webgl"></canvas>
+  </div>
+  <script src="functions.js"></script>
+  <script type="module" src="/main.js"></script>
+</body>
+
 </html>
