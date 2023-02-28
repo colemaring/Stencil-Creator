@@ -10,7 +10,7 @@ const fontLoader = new FontLoader();
 
 // used for camera, renderer, and resize
 const sizes = {
-  width: window.innerWidth / 1.25,
+  width: window.innerWidth / 1.33,
   height: window.innerHeight,
 };
 
@@ -52,7 +52,7 @@ controls.update();
 
 // window resize listener
 window.addEventListener("resize", () => {
-  sizes.width = window.innerWidth / 1.25;
+  sizes.width = window.innerWidth / 1.33;
   sizes.height = window.innerHeight;
 
   camera.aspect = sizes.width / sizes.height;

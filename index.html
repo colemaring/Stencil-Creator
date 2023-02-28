@@ -5,6 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stencil Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -12,7 +15,7 @@
     <div id = "boxContainer">
       <div id = "marginContainer">
         <div id = "outerTextInputContainer">
-          <p>Text options</p><br>
+          <p class = "headerFont">Text options</p><br>
           <div id = "textInputAndFontContainer">
             <input type="text" value='SampleText' id="textbox">
     
@@ -32,31 +35,29 @@
               <option value="Stencilia-Bold">Stencilia-Bold</option>
             </select>
     
-            <div>
-              <label for="fontSlider">Font Size</label>
+            <div id = "fontSizeContainer">
+              <label class = "descFont" for="fontSlider">Font Size</label>
               <input type="range" id="fontSlider" value="10" min="6" max="38">
             </div>
-            
           </div>   
         </div>
         
-  
         <div id = "fontPositionContainer">
-          <p>Text position</p><br>
+          <p class = "headerFont">Text position</p><br>
           <input type="range" id="textPosX" value="0" min="-50" max="50">
-          <label for="textPosX">X Offset</label><br>
+          <label for="textPosX" class = "descFont">X Offset</label><br>
           <input type="range" id="textPosY" value="0" min="-50" max="50">
-          <label for="textPosY">Y Offset</label><br>
+          <label for="textPosY" class = "descFont">Y Offset</label><br>
         </div>
         
         <div id = "backPlateSizeContainer">
-          <p>Backplate Size</p><br>
+          <p class = "headerFont">Backplate Size</p><br>
           <input type="range" id="backPlateX" value="100" min="20" max="200">
-          <label for="backPlateX">Length</label><br>
+          <label for="backPlateX" class = "descFont">Length</label><br>
           <input type="range" id="backPlateY" value="40" min="10" max="80">
-          <label for="backPlateY">Width</label><br>
+          <label for="backPlateY" class = "descFont">Width</label><br>
           <input type="range" id="backPlateZ" value="2" min="0.5" max="5" step="0.5">
-          <label for="backPlateZ">Height</label><br>
+          <label for="backPlateZ" class = "descFont">Height</label><br>
         </div> 
       </div>
       
@@ -67,6 +68,7 @@
   <div id="rightSide">
     <canvas class="webgl"></canvas>
   </div>
+  
   <script src="functions.js"></script>
   <script type="module" src="/main.js"></script>
 </body>
