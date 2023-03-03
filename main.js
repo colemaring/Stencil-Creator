@@ -4,7 +4,6 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { STLExporter } from "three/addons/exporters/STLExporter.js";
 import { CSG } from "three-csg-ts";
-import "./style.css";
 
 const fontLoader = new FontLoader();
 
